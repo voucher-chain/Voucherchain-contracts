@@ -11,14 +11,14 @@ import "../src/VoucherChain.sol";
  */
 contract DeployScript is Script {
     // Configuration constants
-    uint256 constant MINTING_FEE = 200;        // 2% minting fee
-    uint256 constant REDEMPTION_FEE = 100;     // 1% redemption fee
+    uint256 constant MINTING_FEE = 200; // 2% minting fee
+    uint256 constant REDEMPTION_FEE = 100; // 1% redemption fee
     uint256 constant DEFAULT_EXPIRY_DAYS = 90; // 90 days default expiry
 
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
-        
+
         // Get token addresses from environment
         string memory tokenAddressesStr = "";
         try vm.envString("TOKEN_ADDRESSES") returns (string memory val) {
@@ -35,27 +35,22 @@ contract DeployScript is Script {
         for (uint256 i = 0; i < parts.length; i++) {
             tokenAddresses[i] = parseAddr(parts[i]);
         }
-        
+
         // Use deployer as treasury for initial deployment
         address treasury = deployer;
-        
+
         vm.startBroadcast(deployerPrivateKey);
-        
+
         // Deploy the VoucherChain contract as treasury
-        VoucherChain voucherChain = new VoucherChain(
-            treasury,
-            MINTING_FEE,
-            REDEMPTION_FEE,
-            DEFAULT_EXPIRY_DAYS
-        );
-        
+        VoucherChain voucherChain = new VoucherChain(treasury, MINTING_FEE, REDEMPTION_FEE, DEFAULT_EXPIRY_DAYS);
+
         // Add supported tokens
         for (uint256 i = 0; i < tokenAddresses.length; i++) {
             voucherChain.addSupportedToken(tokenAddresses[i]);
         }
-        
+
         vm.stopBroadcast();
-        
+
         // Log deployment information
         console2.log("=== VoucherChain Multi-Token Treasury Deployment ===");
         console2.log("Contract deployed at:", address(voucherChain));
@@ -74,22 +69,23 @@ contract DeployScript is Script {
         console2.log("Note: Agents must approve tokens to contract before minting vouchers");
         console2.log("Contract acts as treasury - agents pay for vouchers when minting");
         console2.log("Agents can mint vouchers for any supported token");
-        
+
         // Verify contract deployment
         require(address(voucherChain) != address(0), "Deployment failed");
         require(voucherChain.treasury() == treasury, "Treasury not set correctly");
         require(voucherChain.mintingFee() == MINTING_FEE, "Minting fee not set correctly");
         require(voucherChain.redemptionFee() == REDEMPTION_FEE, "Redemption fee not set correctly");
         require(voucherChain.defaultExpiryDays() == DEFAULT_EXPIRY_DAYS, "Default expiry not set correctly");
-        
+
         // Verify supported tokens
         for (uint256 i = 0; i < tokenAddresses.length; i++) {
             require(voucherChain.isTokenSupported(tokenAddresses[i]), "Token not supported");
         }
-        
+
         console2.log("Contract deployed and verified successfully!");
     }
     // Helper to split a string by a delimiter
+
     function split(string memory str, string memory delim) internal pure returns (string[] memory) {
         bytes memory strBytes = bytes(str);
         bytes memory delimBytes = bytes(delim);
@@ -113,6 +109,7 @@ contract DeployScript is Script {
         return parts;
     }
     // Helper to parse address from string
+
     function parseAddr(string memory _a) internal pure returns (address) {
         bytes memory tmp = bytes(_a);
         uint160 iaddr = 0;
@@ -128,4 +125,4 @@ contract DeployScript is Script {
         }
         return address(iaddr);
     }
-} 
+}
