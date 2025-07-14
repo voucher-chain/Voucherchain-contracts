@@ -1,6 +1,6 @@
 # VoucherChain
 
-A generic smart contract system for managing token vouchers - minting, redemption, and agent management. This contract can work with any ERC20 token including ETN, and others.
+A smart contract system for managing token vouchers - minting, redemption, and agent management. This contract can work with any ERC20 token including ETN, and others.
 
 ## Features
 
@@ -8,7 +8,6 @@ A generic smart contract system for managing token vouchers - minting, redemptio
 - **Secure Voucher System**: Hash-based voucher codes with expiry support
 - **Agent Management**: Register and manage retail agents with commission tracking
 - **Fee System**: Configurable minting and redemption fees
-- **Multi-Chain Ready**: Can be deployed on any EVM-compatible blockchain
 - **Treasury Functionality**: Contract acts as treasury - agents pay for vouchers when minting
 - **Expired Voucher Reclamation**: Agents can reclaim expired vouchers
 
@@ -78,14 +77,6 @@ The contract acts as a treasury with the following behavior:
 - **Expiry Limits**: Maximum 365 days for voucher expiry
 - **Commission Limits**: Maximum 10% agent commission rate
 - **Treasury Protection**: Fees are transferred immediately to prevent manipulation
-
-## Business Model
-
-The system generates revenue through:
-1. **Minting Fees**: 2-3% fee when agents mint vouchers (immediate treasury transfer)
-2. **Redemption Fees**: 1% fee when users redeem vouchers (immediate treasury transfer)
-3. **Agent Commissions**: Configurable commission rates for agents
-4. **Premium Features**: Optional premium agent tools and analytics
 
 ## Development
 
